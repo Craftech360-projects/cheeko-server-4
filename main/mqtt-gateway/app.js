@@ -125,11 +125,9 @@ class WebSocketBridge extends Emitter {
 
     sendAudio(opus, timestamp) {
         if (this.wsClient && this.wsClient.readyState === WebSocket.OPEN) {
-            const buffer = Buffer.alloc(16 + opus.length);
-            buffer.writeUInt32BE(timestamp, 8);
-            buffer.writeUInt32BE(opus.length, 12);
-            buffer.set(opus, 16);
-            this.wsClient.send(buffer, { binary: true });
+            // Send raw Opus data directly without header
+            // This avoids the need to strip headers in xiaozhi-server
+            this.wsClient.send(opus, { binary: true });
         }
     }
 

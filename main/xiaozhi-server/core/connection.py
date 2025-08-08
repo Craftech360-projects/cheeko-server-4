@@ -252,13 +252,7 @@ class ConnectionHandler:
                 return
             if self.asr is None:
                 return
-            # Strip the 16-byte header added by MQTT gateway
-            # Header format: [8 bytes padding][4 bytes timestamp][4 bytes length][audio data]
-            if len(message) > 16:
-                audio_data = message[16:]  # Skip the 16-byte header
-                self.asr_audio_queue.put(audio_data)
-            else:
-                self.logger.bind(tag=TAG).warning(f"Received audio message too short: {len(message)} bytes")
+            self.asr_audio_queue.put(message)
 
     async def handle_restart(self, message):
         """处理服务器重启请求"""
